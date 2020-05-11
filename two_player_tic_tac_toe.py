@@ -73,7 +73,7 @@ def print_board(game_board_print):
 
 # Method for a player to pick a game board spot
 def pick_spot(current_player, current_player_letter, board_positions_list, game_board_print, current_player_board_list):
-    print(" The current available positions are, " + ', '.join(board_positions_list))
+    print(f"The currently available positions are: {board_positions_list}")
     position = 100
     while position == 100:
         try:
@@ -88,6 +88,7 @@ def pick_spot(current_player, current_player_letter, board_positions_list, game_
             print("Oops, that's not a valid tic tac toe board position!")
     # replace chosen position on board with either X or O depending on the current player's letter
     game_board_print[position] = current_player_letter
+    print_board(game_board_print)
     board_positions_list.remove(position)
     current_player_board_list.append(position)
     
@@ -154,16 +155,16 @@ def switch_players(current_player, current_player_board_list, current_player_let
 
 # Method to determine if players would like to play again
 def play_again():
-    play_again = "m"
-    while play_again == "m":
+    play_again_var = "m"
+    while play_again_var == "m":
         try: 
-            play_again = str(input("Do you want to play again? [y, n]"))
-            if play_again not in ("y", "n"):
+            play_again_var = str(input("Do you want to play again? [y, n] "))
+            if play_again_var not in ("y", "n"):
                 raise ValueError
             else:
-                return play_again
+                return play_again_var
         except ValueError:
-            play_again = "m"
+            play_again_var = "m"
             print("Please return a valid response to the question. Valid responses include: [y, n]")
 
 # Method to play the game 
@@ -176,19 +177,19 @@ def play_game(game_board_print, player_one, player_one_letter, player_two, playe
     while board_positions_list != []:
         board_positions_list, current_player_board_list = pick_spot(current_player, current_player_letter, board_positions_list, game_board_print, current_player_board_list)
 
-        if len(board_positions_list) <= 6:
+        if len(board_positions_list) <= 4:
             maybe_win = check_for_win(current_player_board_list)
             if maybe_win == True:
                 print(f"Congratulations {current_player}, you win!")
-                play_again = play_again()
+                play_again_var = play_again()
                 winning_player = current_player
 
-                return play_again, winning_player
+                return play_again_var, winning_player
             elif board_positions_list == []:
                 print(f"It's a tie.")
-                play_again = play_again()
+                play_again_var = play_again()
 
-                return play_again, player_who_went_second
+                return play_again_var, player_who_went_second
             else:
                 print(f"Let's continue the game. {other_player}, you're next!")
         else:
@@ -201,7 +202,7 @@ def same_people_playing():
     same_people = "m"
     while same_people == "m":
         try:
-            same_people = str(input("Are the same people playing? [y, n]"))
+            same_people = str(input("Are the same people playing? [y, n] "))
             if same_people not in ("y", "n"):
                 raise ValueError
             else:
@@ -219,23 +220,27 @@ def main():
     game_board_print = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     player_one_board_list = []
     player_two_board_list = []
-    play_again, player_to_go_first_next_round = play_game(game_board_print, player_one, player_one_letter, player_two, player_two_letter, board_positions_list, player_one_board_list, player_two_board_list)
+    play_again_var, player_to_go_first_next_round = play_game(game_board_print, player_one, player_one_letter, player_two, player_two_letter, board_positions_list, player_one_board_list, player_two_board_list)
 
-    while play_again == "y":
+    while play_again_var == "y":
         same_people = same_people_playing()
         if same_people == "y":
+            board_positions_list = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+            game_board_print = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+            player_one_board_list = []
+            player_two_board_list = []
             if player_to_go_first_next_round == player_one:
                 player_one_letter = "X"
                 player_two_letter = "O"
-                play_again, player_to_go_first_next_round = play_game(game_board_print, player_one, player_one_letter, player_two, player_two_letter, board_positions_list, player_one_board_list, player_two_board_list)
+                play_again_var, player_to_go_first_next_round = play_game(game_board_print, player_one, player_one_letter, player_two, player_two_letter, board_positions_list, player_one_board_list, player_two_board_list)
             elif player_to_go_first_next_round == player_two:
                 player_one_letter = "O"
                 player_two_letter = "X"
-                play_again, player_to_go_first_next_round = play_game(game_board_print, player_one, player_one_letter, player_two, player_two_letter, board_positions_list, player_one_board_list, player_two_board_list)
+                play_again_var, player_to_go_first_next_round = play_game(game_board_print, player_one, player_one_letter, player_two, player_two_letter, board_positions_list, player_one_board_list, player_two_board_list)
         elif same_people == "n":
             main()
 
-    if play_again == "n":
+    if play_again_var == "n":
         print("Thank you for playing. Play again soon!")
         exit()
 
